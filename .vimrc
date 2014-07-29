@@ -64,6 +64,15 @@ if &term=="xterm"
 	set t_Sf=[3%dm
 endif
 
+let vundle_readme=expand('~/.vim/bundle/Vundle.vim/README.md')
+if !filereadable(vundle_readme)
+  echo "Installing Vundle.."
+  echo ""
+  silent !mkdir -p ~/.vim/bundle
+  silent !git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+  let iCanHazVundle=0
+endif
+
 source /home/$USER/.vim/vundle.sh
 
 
