@@ -10,6 +10,18 @@ set fileencodings=ucs-bom,utf-8,cp950,big5,gb18030,euc-jp,euc-kr,latin1
 language messages C
 filetype off
 
+let vundle_readme=expand('~/.vim/bundle/Vundle.vim/README.md')
+if !filereadable(vundle_readme)
+  echo "Installing Vundle.."
+  echo ""
+  silent !mkdir -p ~/.vim/bundle
+  silent !git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+  let iCanHazVundle=0
+endif
+
+source /home/$USER/.vim/vundle.sh
+
+
 syntax enable
 set background=dark
 "set background=light
@@ -64,16 +76,6 @@ if &term=="xterm"
 	set t_Sf=[3%dm
 endif
 
-let vundle_readme=expand('~/.vim/bundle/Vundle.vim/README.md')
-if !filereadable(vundle_readme)
-  echo "Installing Vundle.."
-  echo ""
-  silent !mkdir -p ~/.vim/bundle
-  silent !git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-  let iCanHazVundle=0
-endif
-
-source /home/$USER/.vim/vundle.sh
 
 
 "--------------------------------------------------------------
