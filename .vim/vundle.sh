@@ -22,7 +22,7 @@ Plugin 'gmarik/Vundle.vim'
 "Plugin 'tpope/vim-fugitive'
 
 " plugin from http://vim-scripts.org/vim/scripts.html
-"Plugin 'L9'
+Plugin 'L9'
 
 " plugin not on GitHub
 Plugin 'git://git.wincent.com/command-t.git'
