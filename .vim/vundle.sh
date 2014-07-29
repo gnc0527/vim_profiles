@@ -23,6 +23,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " plugin from http://vim-scripts.org/vim/scripts.html
 Plugin 'L9'
+Plugin 'taglist.vim'
 
 " plugin not on GitHub
 Plugin 'git://git.wincent.com/command-t.git'
