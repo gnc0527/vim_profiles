@@ -210,23 +210,24 @@ let Tlist_Ctags_Cmd = '/usr/bin/ctags'
 "endif
 let Tlist_Show_One_File = 1       "不同時顯示多個文件的tag，只顯示當前文件的
 let Tlist_Exit_OnlyWindow = 1      "如果taglist窗口是最後一個窗口，則退出vim
-let Tlist_Use_Left_Window = 1         "在右側窗口中顯示taglist窗口 =
+let Tlist_Use_Left_Window = 1         "在左側窗口中顯示taglist窗口 =
+
 "--------------------------------------------------------------
 "Toggle taglist
 "--------------------------------------------------------------
-nnoremap <silent> <F12> :TlistToggle<CR>
+"nnoremap <silent> <F12> :TlistToggle<CR>
 
 "--------------------------------------------------------------
 "Toggle Trinity
 "--------------------------------------------------------------
 "Trinity: Open and close all the three plugins on the same time
-nmap <F8>   :TrinityToggleAll<CR>
+"nmap <F8>   :TrinityToggleAll<CR>
 "Trinity: Open and close the srcexpl.vim separately
-nmap <F9>   :TrinityToggleSourceExplorer<CR>
+"nmap <F9>   :TrinityToggleSourceExplorer<CR>
 "Trinity: Open and close the taglist.vim separately
-nmap <F10>  :TrinityToggleTagList<CR>
+nmap <F11>  :TrinityToggleTagList<CR>
 "Trinity: Open and close the NERD_tree.vim separately
-nmap <F11>  :TrinityToggleNERDTree<CR> 
+nmap <F12>  :TrinityToggleNERDTree<CR>
 
 "--------------------------------------------------------------
 "Toggle ctags

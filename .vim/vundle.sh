@@ -60,7 +60,6 @@ filetype plugin indent on    " required
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'fuzzyfinder'
 Bundle 'snipmate'
-Bundle 'scrooloose/nerdtree'
 Bundle 'kien/ctrlp.vim'
 
 if iCanHazVundle == 0
