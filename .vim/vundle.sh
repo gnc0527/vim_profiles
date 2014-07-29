@@ -61,7 +61,7 @@ Bundle 'fuzzyfinder'
 Bundle 'snipmate'
 Bundle 'scrooloose/nerdtree'
 Bundle 'kien/ctrlp.vim'
-Bundle 'scrooloose/nerdtree'
+
 if iCanHazVundle == 0
     echo "Installing Bundles, please ignore key map error messages"
     echo ""
