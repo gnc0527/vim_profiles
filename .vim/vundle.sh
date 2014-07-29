@@ -1,4 +1,4 @@
-let iCanHazVundle=1
+let iCanHazVundle=0
 
 "==================================================================
 " set the runtime path to include Vundle and initialize
