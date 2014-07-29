@@ -147,6 +147,15 @@ function! LoadCscope()
 endfunction
 "au BufEnter /* call LoadCscope()
 "
+
+if !filereadable("/usr/bin/cscope")
+    silent !sudo apt-get install -y cscope
+endif
+
+if !filereadable("/usr/bin/ctags")
+    silent !sudo apt-get install -y exuberant-ctags
+endif
+
 if has("cscope") && filereadable("/usr/bin/cscope")
    set csprg=/usr/bin/cscope
    set csto=0
