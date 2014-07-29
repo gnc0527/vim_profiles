@@ -64,7 +64,7 @@ if &term=="xterm"
 	set t_Sf=[3%dm
 endif
 
-source /home/user/.vim/vundle.sh
+source /home/$USER/.vim/vundle.sh
 
 
 "--------------------------------------------------------------
