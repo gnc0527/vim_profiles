@@ -4,36 +4,23 @@
 set encoding=utf-8
 "set fileencodings=ucs-bom,utf-8,chinese
 "set fileencoding=gb188030
-set fileencoding=utf-8
 set langmenu=C
-set fileencodings=ucs-bom,utf-8,cp950,big5,gb18030,euc-jp,euc-kr,latin1
+set fileencodings=utf-8,big5,gb2312,gbk,gb18030,utf-16
 language messages C
-filetype off
-
-let vundle_readme=expand('~/.vim/bundle/Vundle.vim/README.md')
-if !filereadable(vundle_readme)
-  echo "Installing Vundle.."
-  echo ""
-  silent !mkdir -p ~/.vim/bundle
-  silent !git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-  let iCanHazVundle=0
-endif
-
-source /home/$USER/.vim/vundle.sh
-
 
 syntax enable
 set background=dark
 "set background=light
 colorscheme solarized
-"colorscheme koehler
-set guifont=monospace\ 12 " for Linux
+let g:solarized_termcolors=256
 
+"colorscheme  koehler
+set guifont=Inconsolata\ 14
 let &termencoding=&encoding
 "set fileencodings=utf-8,gbk,ucs-bom,cp936 
 
 set nocompatible    " Use Vim defaults (much better!)
-set bs=indent,eol,start        " allow backspacing over everything in insert modeset
+set bs=indent,eol,start        " allow backspacing over everything in insert mode
 "set ai            " always set autoindenting on
 "set backup        " keep a backup file
 set viminfo='20,\"50    " read/write a .viminfo file, don't store more
@@ -46,25 +33,62 @@ set shiftwidth=4
 syntax on
 syntax enable
 
-set cursorline
-hi clear CursorLine
-hi CursorLine gui=underline 
-"hi cursorline guibg=#333333 
-hi CursorColumn guibg=#333333
-
-" status line appearance (??????)
-"set laststatus=2 
-"set statusline=
-"set statusline=%4*%<\ %1*[%F] 
-"set statusline+=%4*\ %5*[%{&encoding}, " encoding 
-"set statusline+=%{&fileformat}]%m " file format 
-"set statusline+=%4*%=\ \ %3*%l%4*/%L,\ %3*%c%4*\ \<\0x%02B\> 
-
+set cscopequickfix=s-,c-,d-,i-,t-,e-
 "set encoding=utf-8
-"##############################################################
+
+"-------Code ZheDie-----------------
+"set foldcolumn=4
+"set foldmethod=indent
+"set foldmethod = syntax
+"set foldlevel=100
+
+let    Tlist_Show_One_File=1
+let Tlist_Exit_OnlyWindow=1
+set cscopequickfix=s-,c-,d-,i-,t-,e-
+
+" Only do this part when compiled with support for autocommands
+if has("autocmd")
+  " In text files, always limit the width of text to 78 characters
+  autocmd BufRead *.txt set tw=78
+  " When editing a file, always jump to the last cursor position
+  autocmd BufReadPost *
+  \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+  \   exe "normal! g'\"" |
+  \ endif
+endif
+
+
+function! LoadCscope()
+  let db = findfile("cscope.out", ".;")
+  if (!empty(db))
+    let path = strpart(db, 0, match(db, "/cscope.out$"))
+    set nocscopeverbose " suppress 'duplicate connection' error
+    exe "cs add " . db . " " . path
+    set cscopeverbose
+  endif
+endfunction
+"au BufEnter /* call LoadCscope()
+
+if has("cscope") && filereadable("/usr/bin/cscope")
+   set csprg=/usr/bin/cscope
+   set csto=0
+   set cst
+   set nocsverb
+   call LoadCscope()
+"   " add any database in current directory
+"   if filereadable("cscope.out")
+"      cs add cscope.out
+"   " else add database pointed to by environment
+"   elseif $CSCOPE_DB != ""
+"      cs add $CSCOPE_DB
+"   endif
+   set csverb
+endif
+
+
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
-"##############################################################
 if &t_Co > 2 || has("gui_running")
   syntax on
   set hlsearch
@@ -75,8 +99,78 @@ if &term=="xterm"
 	set t_Sb=[4%dm
 	set t_Sf=[3%dm
 endif
+""""""""""""""""""""""""""""""
+" Tag list (ctags)
+""""""""""""""""""""""""""""""
+"if MySys() == "windows"                "設定windows系統中ctags程序的位置
+ "  let Tlist_Ctags_Cmd = 'ctags'
+"elseif MySys() == "linux"              "設定linux系統中ctags程序的位置
+let Tlist_Ctags_Cmd = '/usr/bin/ctags'
+"endif
+let Tlist_Show_One_File = 1       "不同時顯示多個文件的tag，只顯示當前文件的
+let Tlist_Exit_OnlyWindow = 1      "如果taglist窗口是最後一個窗口，則退出vim
+let Tlist_Use_Left_Window = 1         "在右側窗口中顯示taglist窗口 =
+"--------------------
+" Function: Open tag under cursor in new tab
+" Source:   http://stackoverflow.com/questions/563616/vimctags-tips-and-tricks
+"--------------------
+"map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+"--------------------
+" Function: Remap keys to make it more similar to firefox tab functionality
+" Purpose:  Because I am familiar with firefox tab functionality
+"--------------------
+"map     <C-T>       :tabnew<CR>
+"map     <C-N>       :!gvim &<CR><CR>
+"map     <C-W>       :confirm bdelete<CR>
 
 
+"##################################################
+"omnicppcomplete
+"##################################################
+"參見http://easwy.com/blog/archives/advanced-vim-skills-omin-complete/
+"for C,驗證方式: 輸入」gui「三個字符，然後按下<CTRL-X CTRL-O>，在vim的狀態行會顯示"OmniCompleteion"，
+"表明現在進行的是全能補全，同時會彈出一個下拉菜單，顯示所有匹配的標籤。你可以使用來」CTRL-P「和」CTRL-N「上下選擇，
+"在選擇的同時，所選中的項就被放在光標位置，不需要再按回車來把它放在光標位置（像Source Insight那樣）。
+"filetype plugin indent on 
+"打開預覽窗口會導致下拉菜單抖動，因此我一般都去掉預覽窗口的顯示
+"set completeopt=longest,menu
+"for C++,確保你已關閉了vi兼容模式，並允許進行文件類型檢測
+"set nocp
+"filetype plugin on
+
+set completeopt=longest,menu
+"let OmniCpp_GlobalScopeSearch = 1 
+"let OmniCpp_NamespaceSearch = 1   
+"let OmniCpp_DisplayMode = 1
+"let OmniCpp_ShowScopeInAbbr = 0
+"let OmniCpp_ShowPrototypeInAbbr = 1
+"let OmniCpp_ShowAccess = 1
+"let OmniCpp_MayCompleteDot = 1
+"let OmniCpp_MayCompleteArrow = 1
+"let OmniCpp_MayCompleteScope = 1
+
+"<F8> 切換搜尋字串highlight
+"map <F7> :set hls!<BAR>set hls?<CR>
+"<F9> 切換顯示行號
+"nmap <F9> :set nu!<CR>
+"imap <F9> :set nu!<CR>
+"<F10>呼叫TagList
+"map <F10> :TlistToggle<CR>
+"<F11>開啟torte配色
+"map <F11> :color morning<CR>
+
+"垂直分割視窗, 且在左邊開啟檔案管理員介面
+"map <F12> :vs<CR>:Explore<CR>
+" previous and next  (quickfix)
+map <C-P> :cp<CR>
+map <C-N> :cn<CR>
+""""""""""""""""""""""""""""""""""""""""""""""
+""omni completion
+""""""""""""""""""""""""""""""""""""""""""""""
+set ofu=syntaxcomplete#Complete
+imap <silent> ` <C-X><C-O>
+highlight Pmenu    guibg=darkgrey  guifg=black
+highlight PmenuSel guibg=lightgrey guifg=black
 
 "--------------------------------------------------------------
 "    fuzzy finder
@@ -114,81 +208,23 @@ nnoremap <leader>fl :FufLinel<CR>
 nnoremap <leader>fd :FufDir<CR>
 nnoremap <leader>ft :FufTag! <C-r>=expand('<cword>')<CR><CR>
 
+"------------------------------------------------------------
+"  auto complete
+"------------------------------------------------------------
 
-"-------Code ZheDie-----------------
-"set foldcolumn=4
-"set foldmethod=indent
-"set foldmethod = syntax
-"set foldlevel=100
-
-
-set cscopequickfix=s-,c-,d-,i-,t-,e-
+let g:acp_completeOption = '.,w,b,u,t,i,k' 
 
 
-" Only do this part when compiled with support for autocommands
-if has("autocmd")
-  " In text files, always limit the width of text to 78 characters
-  autocmd BufRead *.txt set tw=78
-  " When editing a file, always jump to the last cursor position
-  autocmd BufReadPost *
-  \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-  \   exe "normal! g'\"" |
-  \ endif
-endif
-
-function! LoadCscope()
-  let db = findfile("cscope.out", ".;")
-  if (!empty(db))
-    let path = strpart(db, 0, match(db, "/cscope.out$"))
-    set nocscopeverbose " suppress 'duplicate connection' error
-    exe "cs add " . db . " " . path
-    set cscopeverbose
-  endif
-endfunction
-"au BufEnter /* call LoadCscope()
-"
-
-if !filereadable("/usr/bin/cscope")
-    silent !sudo apt-get install -y cscope
-endif
-
-if !filereadable("/usr/bin/ctags")
-    silent !sudo apt-get install -y exuberant-ctags
-endif
-
-if has("cscope") && filereadable("/usr/bin/cscope")
-   set csprg=/usr/bin/cscope
-   set csto=0
-   set cst
-   set nocsverb
-	call LoadCscope()
-"   " add any database in current directory
-"   if filereadable("cscope.out")
-"      cs add cscope.out
-"   " else add database pointed to by environment
-"   elseif $CSCOPE_DB != ""
-"      cs add $CSCOPE_DB
-"   endif
-   set csverb
-endif
-
-nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
-nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
-nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
-nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
-nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
-nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
-nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+"------------------------------------------------------------
+"    snipmate setting
+"------------------------------------------------------------
+"那麼開頭大寫的字母便會自動 trigger snipmate 的 completion。
+:filetype plugin on
+let g:acp_behaviorSnipmateLength=1
 
 "------------------------------------------------------------
 "   tabbar
 "------------------------------------------------------------
-" 切換至下個視窗 Ctrl-Tab
-" 切換至上個視窗 Ctrl-Shift-Tab
-" 切換至第n個視窗(n為數字0-9) Alt-n
-"
-
 map <S-x> <ESC>:call CloseTab()<CR>
 func! CloseTab()
 	let s:buf_nr = bufnr("%")
@@ -198,39 +234,17 @@ func! CloseTab()
 endfunction
 let g:Tb_MaxSize = 5
 let g:Tb_TabWrap = 1
-
-
-""""""""""""""""""""""""""""""
-" Tag list (ctags)
-""""""""""""""""""""""""""""""
-"if MySys() == "windows"                "設定windows系統中ctags程序的位置
- "  let Tlist_Ctags_Cmd = 'ctags'
-"elseif MySys() == "linux"              "設定linux系統中ctags程序的位置
-let Tlist_Ctags_Cmd = '/usr/bin/ctags'
-"endif
-let Tlist_Show_One_File = 1       "不同時顯示多個文件的tag，只顯示當前文件的
-let Tlist_Exit_OnlyWindow = 1      "如果taglist窗口是最後一個窗口，則退出vim
-let Tlist_Use_Left_Window = 1         "在左側窗口中顯示taglist窗口 =
-
 "--------------------------------------------------------------
 "Toggle taglist
 "--------------------------------------------------------------
-"nnoremap <silent> <F12> :TlistToggle<CR>
-
-"--------------------------------------------------------------
-"Toggle Trinity
-"--------------------------------------------------------------
+nnoremap <silent> <F12> :TlistToggle<CR>
 "Trinity: Open and close all the three plugins on the same time
-"nmap <F8>   :TrinityToggleAll<CR>
+nmap <F8>   :TrinityToggleAll<CR>
 "Trinity: Open and close the srcexpl.vim separately
-"nmap <F9>   :TrinityToggleSourceExplorer<CR>
+nmap <F9>   :TrinityToggleSourceExplorer<CR>
 "Trinity: Open and close the taglist.vim separately
-nmap <F11>  :TrinityToggleTagList<CR>
+nmap <F10>  :TrinityToggleTagList<CR>
 "Trinity: Open and close the NERD_tree.vim separately
-nmap <F12>  :TrinityToggleNERDTree<CR>
+nmap <F11>  :TrinityToggleNERDTree<CR> 
 
-"--------------------------------------------------------------
-"Toggle ctags
-"--------------------------------------------------------------
 map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-
